@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>मराठी उच्चार तपासणी</title>
+</head>
+<body>
+  <h2>खालील शब्द बोला:</h2>
+  <h1 id="target-word">झाड</h1>
+
+  <button onclick="startRecognition()">बोलायला सुरुवात करा</button>
+  <p id="result">इथे उत्तर येईल...</p>
+
+  <script>
+    const targetWord = document.getElementById('target-word').textContent;
+
+    function startRecognition() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'mr-IN';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = (event) => {
+        const spokenWord = event.results[0][0].transcript.trim();
+        const resultElement = document.getElementById('result');
+
+        if (spokenWord === targetWord) {
+          resultElement.textContent = "बरोबर!";
+          resultElement.style.color = "green";
+        } else {
+          resultElement.textContent = `चूक आहे, तुम्ही बोललंत: "${spokenWord}"`;
+          resultElement.style.color = "red";
+        }
+      };
+
+      recognition.onerror = (event) => {
+        document.getElementById('result').textContent = 'त्रुटी: ' + event.error;
+      };
+    }
+  </script>
+</body>
+</html>
